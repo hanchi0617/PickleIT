@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local project notes (not for GitHub)
+PROJECT_NOTES.md

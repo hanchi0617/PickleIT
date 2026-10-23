@@ -1,0 +1,21 @@
+---
+import { site } from '../config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line" style="padding-bottom: env(safe-area-inset-bottom)">
+  <div class="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 text-sm text-mist md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="font-display text-base font-semibold text-white">{site.name}</p>
+      <p class="mt-1">{site.address}</p>
+    </div>
+    <div class="flex flex-wrap gap-x-6 gap-y-2">
+      <a href="/courts" class="hover:text-white">Courts</a>
+      <a href="/book" class="hover:text-white">Book</a>
+      <a href="/admin" class="hover:text-white">Admin</a>
+      <span>{site.phone}</span>
+      <span>{site.email}</span>
+    </div>
+    <p>© {year} {site.name}</p>
+  </div>
+</footer>

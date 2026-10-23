@@ -1,15 +1,26 @@
 ---
 import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Aurora from '../components/react/Aurora';
+import { site, auroraColors } from '../config/site';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Dim the aurora on content-heavy pages so text stays readable. */
+  auroraOpacity?: number;
+  footer?: boolean;
 }
 
 const {
-  title = 'The Quad Pickleball',
-  description = 'The Quad Pickleball',
+  title,
+  description = `${site.name}: ${site.tagline}`,
+  auroraOpacity = 1,
+  footer = true,
 } = Astro.props;
+
+const fullTitle = title ? `${title} · ${site.name}` : site.name;
 ---
 
 <!doctype html>
@@ -18,13 +29,44 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#05080a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    <script is:inline>
+      // Hide [data-reveal] elements for the entrance animation, but show them
+      // anyway if the animation script hasn't loaded after 2.5s (slow networks).
+      (function (d) {
+        d.classList.add('js');
+        setTimeout(function () {
+          if (!d.classList.contains('reveal-ready')) d.classList.add('reveal-timeout');
+        }, 2500);
+      })(document.documentElement);
+    </script>
+    <slot name="head" />
   </head>
-  <body>
-    <slot />
+  <body class="flex min-h-dvh flex-col">
+    <div
+      class="pointer-events-none fixed inset-0 -z-10"
+      style={`opacity:${auroraOpacity}`}
+      aria-hidden="true"
+    >
+      <Aurora client:only="react" colorStops={[...auroraColors]} />
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink/40 to-ink"></div>
+    </div>
+
+    <Nav />
+    <main class="flex-1">
+      <slot />
+    </main>
+    {footer && <Footer />}
+
+    <script>
+      import { initReveal } from '../scripts/reveal';
+      import { initSpotlight } from '../scripts/spotlight';
+      initReveal();
+      initSpotlight();
+    </script>
   </body>
 </html>

@@ -1,25 +1,82 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+
+@theme {
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Space Grotesk Variable", "Inter Variable", system-ui, sans-serif;
+
+  --color-ink: #05080a;
+  --color-ink-2: #0b1114;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-mist: #a7b4b0;
+  --color-aurora: #7cff67;
+  --color-aurora-mint: #00e5a0;
+  --color-aurora-teal: #00b8a9;
+}
 
 :root {
-  --bg: #ffffff;
-  --fg: #0b0b0c;
+  color-scheme: dark;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-ink);
+  color: #f2f7f5;
+  font-family: var(--font-sans);
   min-height: 100dvh;
-  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(124 255 103 / 0.3);
+}
+
+/* Spotlight: a soft green glow that follows the pointer inside a card. */
+.spotlight {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--mx) var(--my),
+    rgb(124 255 103 / 0.14),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.spotlight:hover::before,
+.spotlight:focus-within::before,
+.spotlight[data-active]::before {
+  opacity: 1;
+}
+
+/* Elements start hidden only when JS will reveal them. */
+.js:not(.reveal-timeout) [data-reveal] {
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .js:not(.reveal-timeout) [data-reveal] {
+    opacity: 1;
   }
 }
