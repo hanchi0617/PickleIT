@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { booking } from '../config/site';
+import MapPlaceholder from '../components/MapPlaceholder.astro';
+import { defaultSettings as booking } from '../config/site';
 
-const price = `${booking.currencySymbol}${booking.pricePerHour}`;
+const price = `${booking.currencySymbol}${Math.min(...booking.courts.map((c) => c.pricePerHour))}`;
 
 const amenities = [
   'LED court lighting',
@@ -53,8 +54,8 @@ const amenities = [
             <h2 class="font-display text-2xl font-semibold">{c.name}</h2>
             <p class="text-mist">{c.note}</p>
           </div>
-          <span class="rounded-full border border-line px-4 py-2 text-sm transition group-hover:border-aurora group-hover:bg-aurora group-hover:text-ink">
-            Book
+          <span class="btn btn-secondary btn-sm group-hover:border-aurora group-hover:bg-aurora group-hover:text-ink">
+            Book <span class="arrow" aria-hidden="true">→</span>
           </span>
         </div>
       </a>
@@ -75,13 +76,18 @@ const amenities = [
     </div>
   </section>
 
+  <section class="mx-auto max-w-6xl px-5 pb-24">
+    <h2 data-reveal class="mb-8 font-display text-3xl font-semibold tracking-tight sm:text-4xl">Where to find us</h2>
+    <div data-reveal><MapPlaceholder /></div>
+  </section>
+
   <section class="mx-auto max-w-6xl px-5 pb-32">
     <h2 data-reveal class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Good to know</h2>
     <div class="mt-8 grid gap-4 md:grid-cols-3">
       {[
         { q: 'How long is a booking?', a: 'Bookings are by the hour. Select several hours in a row for a longer game.' },
         { q: 'Do I need an account?', a: 'No. Just your name, mobile number and email so we can send your confirmation.' },
-        { q: 'What if I need to cancel?', a: 'Cancellation policy coming soon. Contact us with your booking reference.' },
+        { q: 'What if I need to cancel?', a: `Request a cancellation from My bookings at least ${booking.cancellation.minHoursBefore} hours before. The venue confirms every cancellation.` },
       ].map((f) => (
         <div data-reveal class="rounded-3xl border border-line bg-ink-2/60 p-6 backdrop-blur">
           <h3 class="font-display text-lg font-semibold">{f.q}</h3>

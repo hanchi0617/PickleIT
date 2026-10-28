@@ -67,6 +67,138 @@ body {
   opacity: 1;
 }
 
+/* ---------- Buttons ----------
+   Flat, no glow. Primary is solid green; hover lightens it, press nudges
+   it down 1px. Use .btn plus one variant, e.g. class="btn btn-primary". */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.15rem;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 550;
+    line-height: 1.25;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      transform 0.1s ease;
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-aurora);
+    outline-offset: 2px;
+  }
+  .btn .arrow {
+    transition: transform 0.15s ease;
+  }
+  .btn:hover:not(:disabled) .arrow {
+    transform: translateX(3px);
+  }
+
+  .btn-primary {
+    background: var(--color-aurora);
+    color: var(--color-ink);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #a3ff93;
+  }
+  .btn-secondary {
+    background: rgb(255 255 255 / 0.05);
+    border-color: rgb(255 255 255 / 0.14);
+    color: #f2f7f5;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.26);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-mist);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.06);
+    color: #fff;
+  }
+  .btn-danger {
+    background: #f43f5e;
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: #e11d48;
+  }
+  .btn-danger-outline {
+    border-color: rgb(251 113 133 / 0.4);
+    color: #fecdd3;
+  }
+  .btn-danger-outline:hover:not(:disabled) {
+    background: rgb(244 63 94 / 0.12);
+  }
+  .btn-warn {
+    background: #fcd34d;
+    color: var(--color-ink);
+  }
+  .btn-warn:hover:not(:disabled) {
+    background: #fde68a;
+  }
+  .btn-sm {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 0.6rem;
+  }
+  .btn-lg {
+    padding: 0.95rem 1.6rem;
+    font-size: 1rem;
+    border-radius: 0.9rem;
+  }
+  .btn-block {
+    width: 100%;
+  }
+
+  .input {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-line);
+    background: rgb(255 255 255 / 0.04);
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    color: #fff;
+    outline: none;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .input::placeholder {
+    color: rgb(255 255 255 / 0.25);
+  }
+  .input:focus {
+    border-color: rgb(124 255 103 / 0.6);
+    background: rgb(255 255 255 / 0.06);
+  }
+  select.input option {
+    background: var(--color-ink-2);
+  }
+
+  .card {
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-line);
+    background: rgb(11 17 20 / 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
 /* Elements start hidden only when JS will reveal them. */
 .js:not(.reveal-timeout) [data-reveal] {
   opacity: 0;

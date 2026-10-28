@@ -3,10 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import AdminApp from '../components/react/admin/AdminApp';
 ---
 
-<Layout title="Admin" auroraOpacity={0.25} footer={false}>
+<Layout title="Admin" auroraOpacity={0.25} footer={false} reminders={false}>
   <meta name="robots" content="noindex" slot="head" />
   <section class="mx-auto max-w-6xl px-5 pb-32 pt-10">
-    <h1 class="mb-6 font-display text-3xl font-semibold tracking-tight">Admin</h1>
     <AdminApp client:only="react" />
   </section>
 </Layout>

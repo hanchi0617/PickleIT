@@ -1,10 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { site, booking } from '../config/site';
+import MapPlaceholder from '../components/MapPlaceholder.astro';
+import { site, defaultSettings as settings } from '../config/site';
 
-const price = `${booking.currencySymbol}${booking.pricePerHour}`;
-const fmtHour = (h: number) => `${((h + 11) % 12) + 1}${h < 12 ? 'AM' : 'PM'}`;
-const hours = `${fmtHour(booking.openHour)} – ${fmtHour(booking.closeHour)}`;
+const minPrice = Math.min(...settings.courts.map((c) => c.pricePerHour));
+const price = `${settings.currencySymbol}${minPrice}`;
+const fmtHour = (h: number) => `${((h + 11) % 12) + 1}${h < 12 || h === 24 ? 'AM' : 'PM'}`;
+// The page is built ahead of time, so show the usual hours rather than "today".
+const h0 = settings.hours[1];
+const sameEveryDay = settings.hours.every((h) => !h.closed && h.open === h0.open && h.close === h0.close);
+const hours = `${sameEveryDay ? 'Daily' : 'Most days'} · ${fmtHour(h0.open)} – ${fmtHour(h0.close)}`;
 
 const features = [
   {
@@ -39,7 +44,7 @@ const steps = [
       class="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-white/5 px-4 py-1.5 text-xs text-mist backdrop-blur"
     >
       <span class="size-1.5 animate-pulse rounded-full bg-aurora"></span>
-      Courts open today · {hours}
+      Open {hours}
     </p>
 
     <h1
@@ -57,19 +62,10 @@ const steps = [
     </p>
 
     <div data-reveal class="mt-10 flex flex-col gap-3 sm:flex-row">
-      <a
-        href="/book"
-        data-aurora-boost
-        class="group rounded-full bg-aurora px-8 py-4 font-medium text-ink transition hover:shadow-[0_0_40px_rgb(124_255_103/0.55)]"
-      >
-        Book a court
-        <span class="ml-1 inline-block transition-transform group-hover:translate-x-1">→</span>
+      <a href="/book" data-aurora-boost class="btn btn-primary btn-lg">
+        Book a court <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <a
-        href="/courts"
-        data-aurora-boost="0.5"
-        class="rounded-full border border-line bg-white/5 px-8 py-4 font-medium backdrop-blur transition hover:border-white/25"
-      >
+      <a href="/courts" data-aurora-boost="0.5" class="btn btn-secondary btn-lg backdrop-blur">
         See the courts
       </a>
     </div>
@@ -88,7 +84,7 @@ const steps = [
   <!-- Why -->
   <section id="why" class="mx-auto max-w-6xl scroll-mt-20 px-5 py-24">
     <div class="max-w-2xl">
-      <p data-reveal class="text-sm font-medium uppercase tracking-widest text-aurora">Why The Quad</p>
+      <p data-reveal class="text-sm font-medium uppercase tracking-widest text-aurora">Why PickleIT</p>
       <h2 data-reveal class="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
         Less hassle. More rallies.
       </h2>
@@ -121,7 +117,7 @@ const steps = [
         <h2 data-reveal class="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
           Three steps to the court.
         </h2>
-        <a data-reveal href="/book" class="mt-8 inline-block text-aurora hover:underline">Start booking →</a>
+        <a data-reveal href="/book" class="btn btn-secondary mt-8">Start booking <span class="arrow" aria-hidden="true">→</span></a>
       </div>
       <ol class="divide-y divide-line border-y border-line">
         {steps.map((s) => (
@@ -153,7 +149,7 @@ const steps = [
           <p class="mt-3 text-mist">Per court. Bring up to four players. Paddles and balls available.</p>
         </div>
         <ul class="space-y-3 text-mist">
-          {['Pay securely online', 'Instant booking reference', 'Slot held for you while you pay', 'Book up to 60 days ahead'].map((t) => (
+          {['Pay securely online', 'Instant booking reference', 'Reminders before you play', `Book up to ${settings.maxDaysAhead} days ahead`].map((t) => (
             <li class="flex items-center gap-3">
               <span class="grid size-5 place-items-center rounded-full bg-aurora/15 text-aurora">
                 <svg viewBox="0 0 24 24" class="size-3" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" /></svg>
@@ -162,7 +158,7 @@ const steps = [
             </li>
           ))}
           <li class="pt-4">
-            <a href="/book" class="inline-block rounded-full bg-aurora px-6 py-3 font-medium text-ink">Book now</a>
+            <a href="/book" class="btn btn-primary">Book now <span class="arrow" aria-hidden="true">→</span></a>
           </li>
         </ul>
       </div>
@@ -171,17 +167,24 @@ const steps = [
 
   <!-- Visit -->
   <section id="visit" class="mx-auto max-w-6xl scroll-mt-20 px-5 pb-32 pt-12">
-    <div class="grid gap-4 md:grid-cols-3">
-      {[
-        { label: 'Location', value: site.address },
-        { label: 'Hours', value: `Daily · ${hours}` },
-        { label: 'Contact', value: `${site.phone}\n${site.email}` },
-      ].map((c) => (
-        <div data-reveal data-aurora-boost="0.4" class="spotlight rounded-3xl border border-line bg-ink-2/60 p-7 backdrop-blur">
-          <p class="text-sm text-mist">{c.label}</p>
-          <p class="mt-2 whitespace-pre-line font-display text-lg">{c.value}</p>
-        </div>
-      ))}
+    <p data-reveal class="text-sm font-medium uppercase tracking-widest text-aurora">Visit us</p>
+    <h2 data-reveal class="mb-10 mt-3 font-display text-4xl font-semibold tracking-tight sm:text-5xl">Find the courts.</h2>
+    <div class="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+      <div data-reveal data-aurora-boost="0.4">
+        <MapPlaceholder />
+      </div>
+      <div class="grid gap-4">
+        {[
+          { label: 'Location', value: site.address },
+          { label: 'Hours', value: hours },
+          { label: 'Contact', value: `${site.phone}\n${site.email}` },
+        ].map((c) => (
+          <div data-reveal data-aurora-boost="0.4" class="spotlight card !rounded-3xl p-6">
+            <p class="text-sm text-mist">{c.label}</p>
+            <p class="mt-1 whitespace-pre-line font-display text-lg">{c.value}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>
